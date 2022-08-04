@@ -109,7 +109,7 @@ function setup() {
         fruitsGroup.add(grape);
         fruitsGroup.add(pear);
         fruitsGroup.add(suika);
-
+    } //※ここの波括弧が抜けて無限ループの可能性あり
     //アイテムをつくる
    for (var i = 0; i < 3; i++) {
     sunadokei = createSprite(random(canvasSize), random(canvasSize));
@@ -162,7 +162,7 @@ function setup() {
     camera.zoom *= 0.5;
 
 
-    }
+    // } for文を上記の　※部分で消したためここの波括弧を消す
 }
 
 function draw() {
