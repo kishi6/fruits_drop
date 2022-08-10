@@ -72,10 +72,10 @@ function setup() {
 
     // フルーツを作る
     for (var i = 0; i < 20; i++) {
-        apple = createSprite(random(canvasSize), random(canvasSize));
-        grape = createSprite(random(canvasSize), random(canvasSize), 100, 100);
-        pear = createSprite(random(canvasSize), random(canvasSize), 300, 300);
         suika = createSprite(random(canvasSize), random(canvasSize), 500, 500);
+        pear = createSprite(random(canvasSize), random(canvasSize), 300, 300);
+        grape = createSprite(random(canvasSize), random(canvasSize), 100, 100);
+        apple = createSprite(random(canvasSize), random(canvasSize));
 
         // 画像をスプライトに付ける
         apple.addImage(appleImage);
@@ -101,47 +101,44 @@ function setup() {
         //フルーツの衝突基準
         apple.setCollider('circle');
         pear.setCollider('circle');
-        grape.setCollider('circle')
-        suika.setCollider('circle')
+        grape.setCollider('circle');
+        suika.setCollider('circle');
 
         // それぞれのフルーツをフルーツのグループに追加する
         fruitsGroup.add(apple);
         fruitsGroup.add(grape);
         fruitsGroup.add(pear);
         fruitsGroup.add(suika);
-
+    }
     //アイテムをつくる
-   for (var i = 0; i < 3; i++) {
-    sunadokei = createSprite(random(canvasSize), random(canvasSize));
-    speed = createSprite(random(canvasSize), random(canvasSize), 100, 100);
+    for (var i = 0; i < 3; i++) {
+        sunadokei = createSprite(random(canvasSize), random(canvasSize));
+        speed = createSprite(random(canvasSize), random(canvasSize));
 
 
-    // 画像をスプライトに付ける
-    sunadokei.addImage(sunadokeiImage);
-    speed.addImage(grapeImage);
+        // 画像をスプライトに付ける
+        sunadokei.addImage(sunadokeiImage);
+        speed.addImage(grapeImage);
 
-    // 画像の大きさを変える(いらないかも)
-    sunadokei.scale = 0.5;
-    speed.cale = 0.7;
+        // 画像の大きさを変える(いらないかも)
+        sunadokei.scale = 0.5;
+        speed.cale = 0.5;
 
-    //衝突判定確認用のコード
-    //    hole.debug = true;
-    //    apple.debug =true;
-    //    pear.debug =true;
-    //    grape.debug =true;
-    //    suika.debug =true;
-
-
-    //フルーツの衝突基準
-    sunadokei.setCollider('circle');
-    speed.setCollider('circle');
-
-    // それぞれのフルーツをフルーツのグループに追加する
-    itemsGroup.add(sunadokei);
-    itemsGroup.add(speed);
+        //衝突判定確認用のコード
+        //    hole.debug = true;
+        //    apple.debug =true;
+        //    pear.debug =true;
+        //    grape.debug =true;
+        //    suika.debug =true;
 
 
+        //アイテムの衝突基準
+        sunadokei.setCollider('circle');
+        speed.setCollider('circle');
 
+        // それぞれのアイテムをアイテムのグループに追加する
+        itemsGroup.add(sunadokei);
+        itemsGroup.add(speed);
     }
     // ゲームモードを初期化
     gameMode = 'gamePlaying';
@@ -163,7 +160,7 @@ function setup() {
 
 
     }
-}
+
 
 function draw() {
 
@@ -303,12 +300,12 @@ function itemsCatch(hole, items) {
     if (items == speed){
         moveSpeed = 20;
         items.remove();
-        // setTimeout(moveSpeed = 10, 7000);
+        setTimeout(moveSpeed = 10, 7000);
     }
     if(items == sunadokei){
         timer += 5;
         items.remove();
-        // setTimeout(text('+5', width - 100, 300), 5000);
+        setTimeout(text('+5', width - 100, 300), 5000);
     } 
 
 
