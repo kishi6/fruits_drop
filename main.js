@@ -15,12 +15,13 @@ var itemsGroup;
 //ホールの画像
 var holeImage;
 
+// スタート画面の矢印の設定
 var arrowDown;
 var arrowUp;
 var arrowRight;
 var arrowLeft;
 
-var pointerImage;
+// アイテムの画像
 var sunadokeiImage;
 var speedImage;
 // フルーツの画像
@@ -57,14 +58,14 @@ var fruitsGetSound;
 //var bgmSound;
 
 
-
 function preload() {
     //画像の読み込み
     // backgroundImage = loadImage('./img/fruits_background_contrast.png');
     // backgroundImage = loadImage('./img/fruits_background_contrast.png');
     backgroundImage = loadImage('./img/orangebackground.png');
+    // perfectのときの画像を読み込み
     perfectImage = loadImage('./img/perfect.png');
-
+    // アイテムとホールの画像
     holeImage = loadImage('./img/hole.png');
     sunadokeiImage = loadImage('./img/sunadokei.png');
     speedImage = loadImage('./img/kuruma.png');
@@ -77,7 +78,7 @@ function preload() {
     // フルーツの読み込み
     appleImage = loadImage('./img/apple.png');
     grapeImage = loadImage('./img/grape.png');
-    suikaImage = loadImage('./img/suika.png');
+    suikaImage = loadImage('./img/suika_image.png');
     pearImage = loadImage('./img/pear.png');
     //サウンドの読み込み
     gameFinishSound = loadSound('./sound/game_finish.mp3');
@@ -92,14 +93,16 @@ function preload() {
 
 
 function setup() {
+    // スタート画面を表示する
     gameStart_page == 'on'
     background(0)
-    // setTimeout(arin, 8000);
     //キャンバスを作る
     createCanvas(windowWidth, windowHeight);
     //スプライトを作る
     hole = createSprite(0, 300, 500, 500);
+    //衝突判定を円とする
     hole.setCollider('circle');
+    //ホールの大きさを0.7に倍する
     hole.scale = 0.7;
     //画像をスプライトに張り付ける
     hole.addImage(holeImage);
@@ -107,13 +110,13 @@ function setup() {
     fruitsGroup = new Group();
     itemsGroup = new Group();
 
-
     // フルーツを作る
     for (var i = 0; i < 25; i++) {
         apple = createSprite(random(canvasSize), random(canvasSize));
         grape = createSprite(random(canvasSize), random(canvasSize), 100, 100);
         pear = createSprite(random(canvasSize), random(canvasSize), 300, 300);
         suika = createSprite(random(canvasSize), random(canvasSize), 500, 500);
+        // フルーツの数をかぞえる
         fruitsNumber += 4;
 
         // 画像をスプライトに付ける
@@ -122,12 +125,11 @@ function setup() {
         pear.addImage(pearImage);
         suika.addImage(suikaImage);
 
-
         // 画像の大きさを変える(いらないかも)
         apple.scale = 0.5;
         grape.cale = 0.7;
         pear.scale = 1;
-        suika.scale = 1.5;
+        suika.scale = 2.5;
 
         //衝突判定確認用のコード
         //    hole.debug = true;
@@ -135,7 +137,6 @@ function setup() {
         //    pear.debug =true;
         //    grape.debug =true;
         //    suika.debug =true;
-
 
         //フルーツの衝突基準
         apple.setCollider('circle');
@@ -153,7 +154,6 @@ function setup() {
    for (var i = 0; i < 3; i++) {
         sunadokei = createSprite(random(canvasSize), random(canvasSize));
         speed = createSprite(random(canvasSize), random(canvasSize), 100, 100);
-
 
         // 画像をスプライトに付ける
         sunadokei.addImage(sunadokeiImage);
@@ -175,7 +175,6 @@ function setup() {
         //    pear.debug =true;
         //    grape.debug =true;
         //    suika.debug =true;
-
 
         //フルーツの衝突基準
         sunadokei.setCollider('circle');
@@ -200,15 +199,15 @@ function setup() {
     score = 0;
     timer = 25;
     frame = 0;
-
+    // カメラを作る
     camera.zoom *= 0.5;
-
 
     color = 100;
 }
 
 function draw() {
     //キャンバスを塗りつぶす
+    // holeの座標とholeのサイズによって背景の色が変わる
     background(hole.position.x/windowWidth*100,color,hole.position.y/windowHeight*100);
     // background(backgroundImage);
 
@@ -223,7 +222,7 @@ function draw() {
             gameCompleted();
             break;
         case 'gamefinished':
-            // フルーツを集め終わった時の処理
+            // タイムアップになったときの処理
             gamefinished();
             break; 
     }
@@ -233,8 +232,6 @@ function draw() {
     // カメラの影響をなくす
     camera.off();
 
-    
-    //image(pointerImage, width - 500, 10);
     // カウンターの数字を表示
     // スコアとタイマー表示
     textSize(50);
@@ -247,60 +244,77 @@ function draw() {
     // text(hole.position.x, width - 200, 400);
     // text(hole.position.y, width - 200, 500);
 
+    // levelupのときのテキストを表示
     if (leveltext == 'on'){
         textSize(50);
         text('レベルアップ', 400, 200);
+        // 2秒経ったとき、leveltext_off関数を呼び出す
         setTimeout(leveltext_off, 2000);
         
     }
-
+    // speedupのときのテキストを表示
     if (speedtext == 'on'){
         textSize(50);
         text('スピードアップ', 400, 400);
+        // 3秒経ったとき、speedtext_off関数を呼び出す
         setTimeout(speedtext_off, 3000);
         
     }
     if (timetext == 'on'){
         textSize(50);
         text('+3', width - 200, 400);
+        // 2秒経ったとき、timetext_off関数を呼び出す
         setTimeout(timetext_off, 2000);
     }
 
+    // ゲームの開始画面を表示する
     if (gameStart_page == 'on'){
+        //スタート画面の holeのｘ座標とy座標
+        // ゲームのときの動くx座標とy座標ではないので注意！！
         var holeX ;
         var holeY ;
+        // 矢印とholeの距離を決定
         var stepSize = 130
-        background(backgroundImage)
+        // 背景画像を表示
+        background(backgroundImage);
+        // 白色でテキストを書く
         fill(0);
         textSize(100);
         text('GameStart', 400, 500);
         text('Fruits drop', 100, 200);
         textSize(50);
         text('矢印キーでホールを動かしてフルーツを集めよう！', 150, 300);
-        // text('フルーツを集めよう！', 600, 400);
+        
+        //holeと矢印の画像を表示 
         image(holeImage,holeX = 1200,holeY=400,100,100);
         image(arrowUpImage,holeX,holeY-stepSize,100,100);
         image(arrowDownImage,holeX,holeY+stepSize,100,100);
         image(arrowRightImage,holeX+stepSize,holeY,100,100);
         image(arrowLeftImage,holeX-stepSize,holeY,100,100);
-        
+               
+        // 1.8秒経ったとき、gameStart_page_off関数を呼び出す
         setTimeout(gameStart_page_off, 1800);
+        // テキストの色を黒に変える
         fill(255);
     }
 
     function leveltext_off(){
+        // レベルアップのテキストを消す
         leveltext = 'off';
     }
-
     function speedtext_off(){
+        // スピードアップのテキストを消す
         speedtext = 'off';
+        // スピードをアイテムを取る前に戻す
         moveSpeed = moveSpeed_tmp;
     }
     function timetext_off(){
+        // タイムが増えたことを表示するテキストを消す
         timetext = 'off'
     }
 
     function gameStart_page_off(){
+        // スタートページを消す
         gameStart_page = 'off'
     }
 
@@ -311,6 +325,7 @@ function draw() {
         textSize(150);
         textAlign(CENTER);
         text('GameFinished', width / 2, height / 2);
+        // スコアを表示
         text('score ', width / 2 - 150, height / 2 + 200);
         text(score, width / 2 + 200, height / 2 + 200);
         
@@ -322,6 +337,7 @@ function draw() {
         textSize(150);
         textAlign(CENTER);
         text('Perfect !!', width / 2, height / 2);
+        // スコアを表示
         text('score ', width / 2 - 150, height / 2 + 200);
         text(score, width / 2 + 200, height / 2 + 200);
     }
@@ -331,6 +347,7 @@ function draw() {
 // ゲームプレイの処理
 function gamePlaying() {
     
+    // holeを矢印キーで動かす処理
     if (keyDown('RIGHT')) { //右矢印を押したとき
         //速度を10にする
         hole.position.x += moveSpeed;
@@ -394,23 +411,39 @@ function fruitsCatch(hole, fruits) {
     //半径での衝突条件
     // if((fruits.position.x-hole.position.x)**2+(fruits.position.y-hole.position.y)**2<((hole.width*hole.scale - fruits.width*fruits.scale)/2)**2||fruits.radius<hole.radius){
 
+    // 数学での説明
+    // （フルーツとホールの中心間距離）の２乗＜（ホールの半径-フルーツの半径の差）の２乗＿かつ＿
+    // フルーツの半径 < ホールの半径のとき
+    // 直感的な説明
+    // ホールが果物を飲み込むとき
     if ((fruits.position.x - hole.position.x) ** 2 + (fruits.position.y - hole.position.y) ** 2 < ((hole.width * hole.scale - (fruits.width - 20) * fruits.scale) / 2) ** 2 && fruits.width * fruits.scale < hole.width * hole.scale) {
+        // フルーツを消す
         fruits.remove();
         fruitsGetSound.play();
         // 拾ったフルーツの数を数える
         fruitsCount++;
         score += 1;
+        // フルーツを10こ集めたたレベルをアップしてホールを大きくする
         if (fruitsCount == 10) {
             //  hole.width += 25;
             //  hole.height += 25;
             levelupSound.play();
+            // レベルアップテキストを表示
             leveltext = 'on';
+            // ホールを大きくする
             hole.scale += 0.5;
+            // ホールの大きさが大きくなったらcameraを縮小する
             camera.zoom *= 0.9;
+            // フルーツの大きさをリセットする
             fruitsCount = 0;
+            // backgroundにかかわるcolorを変化させる
             color += 5;
+            // ホールのスピードを早くする
             moveSpeed += 0.5;
+            // ホールのスピードがアイテムで変化したことと区別するために
+            // if文を追加、もっとよいやり方が有るかもしれない
             if (moveSpeed == moveSpeed_tmp + 0.5){
+                // ホールのスピードを一時保存する
                 moveSpeed_tmp = moveSpeed;
             }
         }
@@ -421,18 +454,23 @@ function fruitsCatch(hole, fruits) {
 // アイテムを拾う
 function itemsCatch(hole, items) {
     itemGetSound.play();
+    // items.number == 0 のとき、つまりアイテムがspeedのとき
     if (items.number == 0){
+        // holeの速度を増やす
         moveSpeed += 5;
+        // アイテムを消去する
         items.remove();
+        // スピードアップテキストを表示
         speedtext = 'on';
     }
+    // items.number == 0 のとき、つまりアイテムがspeedのとき
     if(items.number == 1){
+        // 残りタイムを増やす
         timer += 4;
+        // アイテムを消去する
         items.remove();
-        timetext = 'on';
-        // textSize(100);
-        // text('+5', width - 100, 300)
-        
+        // スピードアップテキストを表示
+        timetext = 'on';        
     } 
 
 
@@ -442,6 +480,8 @@ function itemsCatch(hole, items) {
 // ゲーム終了
 function gameCompleted() {
     // ホールは動かさない
+    // 大きな意味はないが、この部分を変えることで
+    // gameFinishedの背景の色を変化させる
     hole.position.x = score+20;
     hole.position.y = score-30;
 }
